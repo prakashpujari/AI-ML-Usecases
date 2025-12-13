@@ -1,0 +1,22 @@
+artifact_path: file:C:/pp/GitHub/AI-ML-Usecases/ML_MortgageChurnPrediction/mlruns/0/models/m-a1dc78f9ab38441fa1a5178238fd753c/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.7.0
+model_id: m-a1dc78f9ab38441fa1a5178238fd753c
+model_size_bytes: 7293742
+model_uuid: m-a1dc78f9ab38441fa1a5178238fd753c
+prompts: null
+run_id: 4b88d47b4067438aad36dd9b951b5239
+utc_time_created: '2025-12-10 06:47:04.722891'

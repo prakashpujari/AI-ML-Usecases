@@ -30,6 +30,16 @@ streamlit run "path/to/RecurrentNeuralNetwork(RNNLSTM)/streamlit_app.py"
 
 3. Open your browser to the displayed URL (typically http://localhost:8501)
 
+### Verify your environment
+
+If you want to quickly check that all required Python packages are installed in your active environment, run the small checker script included in this folder:
+
+```bash
+python check_requirements.py
+```
+
+The script will print OK for installed packages and list any missing packages with a suggested `pip install` command.
+
 ## Features
 
 ### Time Series Forecasting (LSTM)

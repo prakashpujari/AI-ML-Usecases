@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  mlflow:
+    image: python:3.11-slim
+    container_name: mlflow
+    volumes:
+      - ./mlruns:/mlflow/artifacts
+      - ./mlflow_db:/mlflow_db
+      - ./models:/app/models
+      - ./:/app
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt mlflow && \
+              mlflow server --backend-store-uri sqlite:///mlflow_db/mlflow.db \
+              --default-artifact-root /mlflow/artifacts --host 0.0.0.0 --port 5000"
+
+  train:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+    container_name: car-train
+    volumes:
+      - ./models:/app/models
+      - ./mlruns:/mlflow/artifacts
+      - ./:/app
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: car-api
+    volumes:
+      - ./models:/app/models
+      - ./:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    container_name: car-ui
+    volumes:
+      - ./models:/app/models
+      - ./:/app
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+
+# Usage:
+#   docker-compose up --build mlflow train api ui
+# The `train` service runs the training script and writes a local model to ./models/model.pkl

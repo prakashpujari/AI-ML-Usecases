@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carprice-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: carprice-api
+  template:
+    metadata:
+      labels:
+        app: carprice-api
+    spec:
+      containers:
+      - name: carprice-api
+        image: REPLACE_WITH_YOUR_REGISTRY/carprice-api:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

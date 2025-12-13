@@ -1,0 +1,6 @@
+This file is a placeholder explaining how to add the actual screenshot image.
+
+To add the screenshot you attached as `images/outcome_screenshot.png`, upload the PNG file to this repository path (replace this .txt file) or provide the base64-encoded PNG content and I will write it for you.
+
+Filename to add: images/outcome_screenshot.png
+Purpose: Example outcome screenshot shown in README

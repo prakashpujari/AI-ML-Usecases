@@ -1,0 +1,11 @@
+Text,Sentiment
+"Stock prices are rising rapidly!",positive
+"The market is crashing.",negative
+"Investors are optimistic about the future.",positive
+"Economic uncertainty is causing fear.",negative
+"Company earnings beat expectations.",positive
+"Regulatory changes may hurt profits.",negative
+"Strong growth expected next quarter.",positive
+"Layoffs announced in major sector.",negative
+"New product launch excites investors.",positive
+"Global tensions impact market stability.",negative
