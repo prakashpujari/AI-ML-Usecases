@@ -4,7 +4,12 @@ import requests
 import streamlit as st
 import pandas as pd
 import requests
-import shap
+try:
+    import shap
+    HAS_SHAP = True
+except Exception:
+    shap = None
+    HAS_SHAP = False
 import joblib
 import os
 import matplotlib.pyplot as plt
@@ -71,17 +76,20 @@ else:
     st.subheader("SHAP Explainability")
     if st.button("Compute SHAP summary (may be slow)"):
         # compute SHAP using a small sample
-        try:
-            sample = df.copy() if df.shape[0] >= 50 else generate_synthetic_car_data(200)
-            if "price" in sample.columns:
-                sample = sample.drop(columns=["price"], errors='ignore')
-            X = pd.get_dummies(sample, columns=[c for c in ["brand", "condition", "transmission"] if c in sample.columns], drop_first=True)
-            # align columns to model
-            X = X.reindex(columns=features, fill_value=0)
-            explainer = shap.TreeExplainer(model)
-            shap_values = explainer.shap_values(X)
-            plt.clf()
-            shap.summary_plot(shap_values, X, show=False)
-            st.pyplot(plt.gcf())
-        except Exception as e:
-            st.error(f"Error computing SHAP: {e}")
+        if not HAS_SHAP:
+            st.error("The package 'shap' is not installed. Install with `pip install -r requirements.txt` or `pip install shap` and restart the app.")
+        else:
+            try:
+                sample = df.copy() if df.shape[0] >= 50 else generate_synthetic_car_data(200)
+                if "price" in sample.columns:
+                    sample = sample.drop(columns=["price"], errors='ignore')
+                X = pd.get_dummies(sample, columns=[c for c in ["brand", "condition", "transmission"] if c in sample.columns], drop_first=True)
+                # align columns to model
+                X = X.reindex(columns=features, fill_value=0)
+                explainer = shap.TreeExplainer(model)
+                shap_values = explainer.shap_values(X)
+                plt.clf()
+                shap.summary_plot(shap_values, X, show=False)
+                st.pyplot(plt.gcf())
+            except Exception as e:
+                st.error(f"Error computing SHAP: {e}")

@@ -1,7 +1,11 @@
 import io
 import pandas as pd
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+try:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.pdfgen import canvas
+    _HAS_REPORTLAB = True
+except Exception:
+    _HAS_REPORTLAB = False
 
 def export_csv_bytes(df: pd.DataFrame) -> bytes:
     buf = io.BytesIO()
@@ -9,6 +13,11 @@ def export_csv_bytes(df: pd.DataFrame) -> bytes:
     return buf.getvalue()
 
 def export_pdf_bytes(title: str, df: pd.DataFrame, max_rows: int = 50) -> bytes:
+    if not _HAS_REPORTLAB:
+        raise RuntimeError(
+            "The 'reportlab' package is required to export PDFs. Install it with: `pip install reportlab`"
+        )
+
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=letter)
     width, height = letter
