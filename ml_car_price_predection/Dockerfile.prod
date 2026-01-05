@@ -1,0 +1,10 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+# Copy only what's needed for runtime
+COPY predict_api.py /app/
+COPY models/production/model.pkl /app/models/production/model.pkl
+# If model not present, leave a friendly error — CI should ensure the model artifact is built into the image
+EXPOSE 8000
+CMD ["uvicorn", "predict_api:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  mlflow:
+    image: python:3.11-slim
+    container_name: mlflow-sit
+    volumes:
+      - mlflow-sit-data:/mlflow/artifacts
+      - ../../mlflow_db:/mlflow_db
+      - ../../models:/app/models
+    working_dir: /app
+    ports:
+      - "5001:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=sqlite:///mlflow_db/mlflow.db
+      - ENV=sit
+    command: >
+      sh -c "pip install --no-cache-dir mlflow && \
+              mlflow server --backend-store-uri sqlite:///mlflow_db/mlflow.db \
+              --default-artifact-root /mlflow/artifacts --host 0.0.0.0 --port 5000"
+    networks:
+      - ml-network-sit
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-sit
+    environment:
+      - POSTGRES_USER=ml_user
+      - POSTGRES_PASSWORD=ml_password_sit
+      - POSTGRES_DB=ml_evaluation
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-sit-data:/var/lib/postgresql/data
+      - ../../scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ml-network-sit
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ml_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-sit
+    ports:
+      - "6380:6379"
+    networks:
+      - ml-network-sit
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ../../
+      dockerfile: deployment/sit/Dockerfile.api
+    container_name: car-api-sit
+    ports:
+      - "8001:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - DATABASE_URL=postgresql://ml_user:ml_password_sit@postgres:5432/ml_evaluation
+      - REDIS_URL=redis://redis:6379/0
+      - ENV=sit
+      - LOG_LEVEL=info
+      - ENABLE_CACHE=true
+    depends_on:
+      mlflow:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ml-network-sit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ui:
+    build:
+      context: ../../
+      dockerfile: deployment/sit/Dockerfile.ui
+    container_name: car-ui-sit
+    ports:
+      - "8502:8501"
+    environment:
+      - API_URL=http://api:8000
+      - ENV=sit
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - ml-network-sit
+
+networks:
+  ml-network-sit:
+    driver: bridge
+
+volumes:
+  mlflow-sit-data:
+  postgres-sit-data:

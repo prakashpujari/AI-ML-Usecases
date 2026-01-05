@@ -1,0 +1,38 @@
+# Airflow Configuration
+
+airflow:
+  dag_id: car_price_prediction_training_pipeline
+  schedule_interval: '0 2 * * *'  # Daily at 2 AM
+  catchup: false
+  max_active_runs: 1
+  
+  default_args:
+    owner: ml-team
+    depends_on_past: false
+    email: ['mailtopprakash01@gmail.com']
+    email_on_failure: true
+    email_on_retry: false
+    retries: 2
+    retry_delay_minutes: 5
+    execution_timeout_hours: 2
+
+tasks:
+  validate_data:
+    min_rows: 100
+    max_missing_percent: 30
+  
+  train_model:
+    timeout_seconds: 7200
+  
+  evaluate_model:
+    store_in_db: true
+  
+  register_model:
+    promotion_threshold_r2: 0.7
+    stage: Staging
+
+mlflow:
+  tracking_uri: http://mlflow:5000
+  
+database:
+  connection_string: postgresql://postgres:postgres@postgres:5432/ml_evaluation

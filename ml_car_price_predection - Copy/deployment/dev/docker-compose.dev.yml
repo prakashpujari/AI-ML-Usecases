@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  mlflow:
+    image: python:3.11-slim
+    container_name: mlflow-dev
+    volumes:
+      - ../../mlruns:/mlflow/artifacts
+      - ../../mlflow_db:/mlflow_db
+      - ../../models:/app/models
+      - ../../:/app
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=sqlite:///mlflow_db/mlflow.db
+      - ENV=development
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt mlflow && \
+              mlflow server --backend-store-uri sqlite:///mlflow_db/mlflow.db \
+              --default-artifact-root /mlflow/artifacts --host 0.0.0.0 --port 5000"
+    networks:
+      - ml-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-dev
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ml_evaluation
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+    networks:
+      - ml-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ../../
+      dockerfile: deployment/dev/Dockerfile.api
+    container_name: car-api-dev
+    volumes:
+      - ../../models:/app/models
+      - ../../:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ml_evaluation
+      - ENV=development
+      - LOG_LEVEL=debug
+    depends_on:
+      mlflow:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - ml-network
+    command: uvicorn predict_api:app --host 0.0.0.0 --port 8000 --reload
+
+  ui:
+    build:
+      context: ../../
+      dockerfile: deployment/dev/Dockerfile.ui
+    container_name: car-ui-dev
+    volumes:
+      - ../../models:/app/models
+      - ../../:/app
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+      - ENV=development
+    depends_on:
+      - api
+    networks:
+      - ml-network
+    command: streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0 --server.runOnSave true
+
+networks:
+  ml-network:
+    driver: bridge
+
+volumes:
+  postgres-dev-data:

@@ -1,0 +1,22 @@
+artifact_path: file:C:/pp/GitHub/AI-ML-Usecases/ML_MortgageChurnPrediction/ml_car_price_predection/mlruns/0/models/m-a82ffd6b9a2d4f4ba0dde814b275766a/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.7.0
+model_id: m-a82ffd6b9a2d4f4ba0dde814b275766a
+model_size_bytes: 7293742
+model_uuid: m-a82ffd6b9a2d4f4ba0dde814b275766a
+prompts: null
+run_id: eb7bf147e2e449b98a7bde8f7eb0b4b1
+utc_time_created: '2025-12-17 04:40:48.344957'

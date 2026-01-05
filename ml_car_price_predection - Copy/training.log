@@ -1,0 +1,79 @@
+2025-12-16 23:37:01,576 - INFO - Starting model training process....
+2025-12-16 23:37:01,616 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-16 23:37:01,642 - INFO - Dataset loaded and split into train and test sets.
+2025-12-16 23:37:04,262 - INFO - Training RandomForestRegressor...
+2025-12-16 23:37:04,737 - INFO -  X_test[0] ---> [320.42347851   1.75845733   0.56429423   0.           0.
+   0.           2.50945967   0.           0.           0.
+   0.           2.51425379   0.           2.10508123   0.
+   0.           2.00048418   0.        ]
+2025-12-16 23:39:46,541 - INFO - Starting model training process....
+2025-12-16 23:39:46,567 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-16 23:40:45,985 - INFO - Starting model training process....
+2025-12-16 23:40:46,010 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-16 23:40:46,043 - INFO - Dataset loaded and split into train and test sets.
+2025-12-16 23:40:47,625 - INFO - Training RandomForestRegressor...
+2025-12-16 23:40:48,062 - INFO -  X_test[0] ---> [320.42347851   1.75845733   0.56429423   0.           0.
+   0.           2.50945967   0.           0.           0.
+   0.           2.51425379   0.           2.10508123   0.
+   0.           2.00048418   0.        ]
+2025-12-16 23:40:48,124 - INFO -  Car info :    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission
+0  Ford  Model B  2014          1.7    94799  Electric       Manual 
+2025-12-16 23:40:48,179 - INFO - Regression MSE: 5840591.7972, R2: 0.7659
+2025-12-16 23:40:58,502 - INFO - Saved model artifact to models\model.pkl
+2026-01-02 18:04:48,959 - INFO - Starting model training process....
+2026-01-02 18:04:49,065 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2026-01-02 18:04:49,130 - INFO - Dataset loaded and split into train and test sets.
+2026-01-02 18:04:54,720 - INFO - Training RandomForestRegressor...
+2026-01-02 18:04:55,367 - INFO -  X_test[0] ---> [320.42347851   1.75845733   0.56429423   0.           0.
+   0.           2.50945967   0.           0.           0.
+   0.           2.51425379   0.           2.10508123   0.
+   0.           2.00048418   0.        ]
+2026-01-02 18:04:55,451 - INFO -  Car info :    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission
+0  Ford  Model B  2014          1.7    94799  Electric       Manual 
+2026-01-02 18:04:55,530 - INFO - Regression MSE: 5840591.7972, R2: 0.7659
+2026-01-02 18:05:33,384 - INFO - Saved model artifact to models\model.pkl
+2026-01-02 18:19:01,997 - INFO - Starting model training process....
+2026-01-02 18:19:02,029 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2026-01-02 18:19:02,065 - INFO - Dataset loaded and split into train and test sets.
+2026-01-02 19:59:56,328 - INFO - Starting model training process....
+2026-01-02 19:59:56,372 - INFO - Loaded local training CSV: c:\pp\GitHub\AI-ML-Usecases\ml_car_price_predection\data\trainset\train.csv
+2026-01-02 19:59:56,378 - INFO - Loaded local test CSV: c:\pp\GitHub\AI-ML-Usecases\ml_car_price_predection\data\testset\test.csv
+2026-01-02 19:59:56,423 - INFO - Dataset prepared: 800 train rows, 200 test rows
+2026-01-02 20:00:02,108 - INFO - Training RandomForestRegressor...
+2026-01-02 20:00:02,822 - INFO -  X_test[0] ---> [3.22835840e+02 1.74231635e+00 2.70416315e-01 2.49417327e+00
+ 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00
+ 0.00000000e+00 2.44452933e+00 0.00000000e+00 0.00000000e+00
+ 0.00000000e+00 2.11100165e+00 0.00000000e+00 0.00000000e+00
+ 0.00000000e+00 2.00075668e+00]
+2026-01-02 20:00:02,905 - INFO - Regression MSE: 5744435.5079, R2: 0.7901
+2026-01-02 20:00:25,059 - INFO - Saved model artifact to models\production\model.pkl

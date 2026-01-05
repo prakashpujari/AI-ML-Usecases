@@ -1,0 +1,35 @@
+# .astroignore
+# Files and folders to ignore when building the Docker image
+
+# Astronomer CLI
+.astro
+
+# Git
+.git
+.gitignore
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__
+.pytest_cache
+.venv
+venv
+env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+mlruns
+mlflow_db
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo

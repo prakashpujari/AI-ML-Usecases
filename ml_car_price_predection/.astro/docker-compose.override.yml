@@ -1,0 +1,8 @@
+version: "3.1"
+services:
+  postgres:
+    ports:
+      - "5434:5432"
+  scheduler:
+    environment:
+      - AIRFLOW_DATABASE_DISABLE_MIGRATION=false

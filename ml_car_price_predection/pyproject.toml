@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "ml-car-price-prediction"
+version = "1.0.0"
+description = "Machine Learning project for car price prediction with Airflow"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
