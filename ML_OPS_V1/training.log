@@ -1,0 +1,167 @@
+2025-12-08 01:52:40,650 - INFO - Starting model training process....
+2025-12-08 01:52:40,654 - INFO - Loading the iris dataset...
+2025-12-08 01:52:40,686 - INFO - Dataset loaded and split into train and test sets.
+2025-12-08 01:52:46,125 - INFO - Training the RandomForestClassifier model...
+2025-12-08 01:52:47,016 - INFO - Model training completed.
+2025-12-08 01:52:47,120 - INFO - Model accuracy: 0.900000
+2025-12-10 00:44:41,568 - INFO - Starting model training process....
+2025-12-10 00:44:41,569 - INFO - Loading the iris dataset...
+2025-12-10 00:44:41,583 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 00:44:43,778 - INFO - Training the RandomForestClassifier model...
+2025-12-10 00:44:43,983 - INFO - Model training completed.
+2025-12-10 00:44:44,016 - INFO - Model accuracy: 0.900000
+2025-12-10 00:48:35,413 - INFO - Starting model training process....
+2025-12-10 00:48:35,415 - INFO - Loading the iris dataset...
+2025-12-10 00:48:35,433 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 00:48:37,605 - INFO - Training the RandomForestClassifier model...
+2025-12-10 00:48:37,823 - INFO - Model training completed.
+2025-12-10 00:48:37,856 - INFO - Model accuracy: 0.900000
+2025-12-10 00:51:26,840 - INFO - Starting model training process....
+2025-12-10 00:51:26,841 - INFO - Loading the iris dataset...
+2025-12-10 00:51:26,856 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 00:51:28,945 - INFO - Training the RandomForestClassifier model...
+2025-12-10 00:51:29,144 - INFO - Model training completed.
+2025-12-10 00:51:29,175 - INFO - Model accuracy: 0.900000
+2025-12-10 00:56:28,192 - INFO - Starting model training process....
+2025-12-10 00:56:28,194 - INFO - Loading the iris dataset...
+2025-12-10 00:56:28,255 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 00:56:28,272 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 00:56:30,382 - INFO - Training the RandomForestClassifier model...
+2025-12-10 00:56:53,468 - INFO - Starting model training process....
+2025-12-10 00:56:53,468 - INFO - Loading the iris dataset...
+2025-12-10 00:56:53,480 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 00:56:53,487 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 00:56:55,272 - INFO - Training the RandomForestRegressor model (regression)...
+2025-12-10 01:05:24,700 - INFO - Starting model training process....
+2025-12-10 01:05:24,701 - INFO - Loading the iris dataset...
+2025-12-10 01:05:24,757 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:05:24,778 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:05:27,699 - INFO - Training the RandomForestRegressor model (regression)...
+2025-12-10 01:07:16,856 - INFO - Starting model training process....
+2025-12-10 01:07:16,897 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:07:16,934 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:07:19,114 - INFO - Training RandomForestRegressor...
+2025-12-10 01:07:19,665 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:18:47,448 - INFO - Starting model training process....
+2025-12-10 01:18:47,476 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:18:47,506 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:18:49,813 - INFO - Training RandomForestRegressor...
+2025-12-10 01:18:50,333 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:22:11,423 - INFO - Starting model training process....
+2025-12-10 01:22:11,460 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:22:11,495 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:22:13,891 - INFO - Training RandomForestRegressor...
+2025-12-10 01:22:14,595 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:22:41,211 - INFO - Starting model training process....
+2025-12-10 01:22:41,249 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:22:41,287 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:22:43,913 - INFO - Training RandomForestRegressor...
+2025-12-10 01:22:44,560 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:25:05,193 - INFO - Starting model training process....
+2025-12-10 01:25:05,233 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:25:05,286 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:25:07,782 - INFO - Training RandomForestRegressor...
+2025-12-10 01:25:08,336 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:30:52,029 - INFO - Starting model training process....
+2025-12-10 01:30:52,067 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:30:52,101 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:30:54,013 - INFO - Training RandomForestRegressor...
+2025-12-10 01:30:54,531 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:40:02,364 - INFO - Starting model training process....
+2025-12-10 01:40:02,394 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:40:02,425 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:40:05,059 - INFO - Training RandomForestRegressor...
+2025-12-10 01:40:05,616 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 01:40:38,314 - INFO - Starting model training process....
+2025-12-10 01:40:38,331 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 01:40:38,360 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 01:40:40,748 - INFO - Training RandomForestRegressor...
+2025-12-10 01:40:41,330 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 22:02:18,994 - INFO - Starting model training process....
+2025-12-10 22:02:19,016 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 22:02:19,049 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 22:02:20,802 - INFO - Training RandomForestRegressor...
+2025-12-10 22:02:21,214 - INFO - Regression MSE: 5694286.9248, R2: 0.7919
+2025-12-10 22:12:53,676 - INFO - Starting model training process....
+2025-12-10 22:12:53,699 - INFO - Car data loaded successfully. Head:
+    Make    Model  Year  Engine Size  Mileage Fuel Type Transmission         Price
+0  Honda  Model B  2015          3.9    74176    Petrol       Manual  30246.207931
+1   Ford  Model C  2014          1.7    94799  Electric    Automatic  22785.747684
+2    BMW  Model B  2006          4.1    98385  Electric       Manual  25760.290347
+3  Honda  Model B  2015          2.6    88919  Electric    Automatic  25638.003491
+4  Honda  Model C  2004          3.4   138482    Petrol    Automatic  21021.386657
+2025-12-10 22:12:53,732 - INFO - Dataset loaded and split into train and test sets.
+2025-12-10 22:12:55,536 - INFO - Training RandomForestRegressor...
+2025-12-10 22:12:55,961 - INFO - Regression MSE: 5694286.9248, R2: 0.7919

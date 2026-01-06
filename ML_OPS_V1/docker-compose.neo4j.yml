@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  neo4j:
+    image: neo4j:5.11
+    container_name: mlops_neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_dbms_memory_pagecache_size=512M
+      - NEO4J_dbms_memory_heap_max__size=1G
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # BOLT
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+      - ./neo4j/import:/import
+    restart: unless-stopped
