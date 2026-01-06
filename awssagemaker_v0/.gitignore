@@ -1,0 +1,83 @@
+# Python related
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env
+.venv311/
+
+# Pyenv
+.python-version
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Ignore notebook outputs (keep notebooks themselves tracked)
+*.nbconvert.ipynb
+
+# SageMaker / model artifacts
+model.tar.gz
+**/model.joblib
+*.joblib
+
+# Local model folders (optional)
+# Ignore everything under `Model/` by default but allow specific approved artifacts.
+# This lets you keep large model folders out of Git while permitting a
+# small, tracked artifact (for example `Model/Train/model.joblib`).
+Model/*
+!Model/Train/
+!Model/Train/model.joblib
+
+# Editors and OS
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
