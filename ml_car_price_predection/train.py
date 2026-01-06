@@ -14,6 +14,11 @@ import argparse
 from datetime import datetime
 import shutil
 from contextlib import contextmanager
+import sys
+import io
+
+# Add scripts to path for db_utils
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scripts'))
 
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
@@ -28,6 +33,14 @@ from sklearn.metrics import (
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
+
+# Import database utilities
+try:
+    from db_utils import ModelEvaluationDB
+    HAS_DB = True
+except ImportError:
+    HAS_DB = False
+    logging.warning("Database utilities not available. Model will not be stored in database.")
 
 
 # Dummy MLflow wrapper for when MLflow is unavailable
@@ -423,6 +436,38 @@ def main():
             # Log the model artifact to MLflow
             safe_mlflow_log(mlflow.log_artifact, artifact_path, "production_model")
             
+            # Store model in database
+            if HAS_DB:
+                try:
+                    # Serialize model to bytes
+                    model_bytes = io.BytesIO()
+                    joblib.dump(model_artifact, model_bytes)
+                    model_binary = model_bytes.getvalue()
+                    
+                    # Get metrics for storage
+                    accuracy = test_metrics.get('accuracy') if is_classification else None
+                    rmse = test_metrics.get('rmse') if is_regression else None
+                    r2 = test_metrics.get('r2') if is_regression else None
+                    
+                    # Store in database
+                    with ModelEvaluationDB() as db:
+                        # Generate version from timestamp
+                        model_version = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        
+                        db.store_model(
+                            run_id=run.info.run_id,
+                            model_version=model_version,
+                            model_type="RandomForest",
+                            model_binary=model_binary,
+                            accuracy=accuracy,
+                            rmse=rmse,
+                            r2=r2,
+                            is_production=True  # Mark new model as production
+                        )
+                        logging.info(f"Model stored in database with version: {model_version}")
+                except Exception as e:
+                    logging.warning(f"Failed to store model in database: {e}. Continuing...")
+            
         except Exception as e:
             logging.error("Failed to save local model artifact: %s", e)
             raise
@@ -433,6 +478,7 @@ def main():
         logging.info(f"MLflow Run ID: {run.info.run_id}")
         logging.info(f"Model registered as: {MODEL_NAME}")
         logging.info(f"Artifact saved to: {artifact_path}")
+        logging.info("Model also stored in database for production access")
         logging.info("="*80)
 
 

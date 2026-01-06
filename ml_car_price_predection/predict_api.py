@@ -1,16 +1,21 @@
 """
-FastAPI prediction service. Loads the trained model from `models/model.pkl`.
+FastAPI prediction service. Loads the trained model from database (preferred) or filesystem.
 """
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional, List, Tuple
-import joblib
 import pandas as pd
 import os
+import sys
+import logging
 
-# Prefer production model artifact; fall back to compatibility path
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "production", "model.pkl")
-MODEL_PATH_FALLBACK = os.path.join(os.path.dirname(__file__), "models", "model.pkl")
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from models.model_loader import load_production_model
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Car Price Prediction API")
 
@@ -25,18 +30,23 @@ class PredictRequest(BaseModel):
 
 
 def load_model() -> Tuple[object, object, object, List[str], Optional[str]]:
-    path = MODEL_PATH if os.path.exists(MODEL_PATH) else (MODEL_PATH_FALLBACK if os.path.exists(MODEL_PATH_FALLBACK) else None)
-    if path is None:
-        # Do not raise at import time; return empty placeholders so the API can start.
-        return None, None, None, [], None
-    payload = joblib.load(path)
-    model = payload.get("model")
-    preprocessor = payload.get("preprocessor")
-    scaler = payload.get("scaler")
-    # prefer explicit input_features; fall back to features if necessary
-    input_features = payload.get("input_features", payload.get("features", []))
-    target = payload.get("target")
-    return model, preprocessor, scaler, input_features, target
+    """Load model from database (preferred) or filesystem"""
+    try:
+        model_artifact = load_production_model()
+        if model_artifact:
+            model = model_artifact.get("model")
+            preprocessor = model_artifact.get("preprocessor")
+            scaler = model_artifact.get("scaler")
+            input_features = model_artifact.get("input_features", model_artifact.get("features", []))
+            target = model_artifact.get("target")
+            logger.info("✓ Model loaded successfully (from database or filesystem)")
+            return model, preprocessor, scaler, input_features, target
+    except Exception as e:
+        logger.error(f"Failed to load model: {e}")
+    
+    # If both database and filesystem fail, return empty placeholders
+    logger.warning("No model found. API will start but predictions will fail.")
+    return None, None, None, [], None
 
 
 model, preprocessor, scaler, input_features, target_col = load_model()

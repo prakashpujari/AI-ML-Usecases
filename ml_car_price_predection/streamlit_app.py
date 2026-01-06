@@ -1,51 +1,55 @@
 import streamlit as st
 import pandas as pd
 import requests
-import streamlit as st
-import pandas as pd
-import requests
+import sys
+import os
+import logging
+
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
 try:
     import shap
     HAS_SHAP = True
 except Exception:
     shap = None
     HAS_SHAP = False
-import joblib
-import os
+
 import matplotlib.pyplot as plt
-from data import generate_synthetic_car_data, load_dataset
+from data.data_generator import generate_synthetic_car_data, load_dataset
+from models.model_loader import load_production_model, get_model_loader
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 st.set_page_config(page_title="Car Price Explorer", layout="wide")
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "model.pkl")
-
 st.title("Car Price Prediction Explorer")
 
-if not os.path.exists(MODEL_PATH):
-    st.warning("Model artifact not found. Run `python train.py` first to produce `models/model.pkl`.")
-else:
-    payload = joblib.load(MODEL_PATH)
-    model = payload["model"]
-    features = payload.get("features", [])
+# Load model from database (preferred) or filesystem
+try:
+    model_artifact = load_production_model()
+    if model_artifact is None:
+        st.error("❌ Model artifact not found. Run `python train.py` first to train the model.")
+        st.stop()
+    
+    model = model_artifact.get("model")
+    features = model_artifact.get("features", [])
+    preprocessor = model_artifact.get("preprocessor")
+    scaler = model_artifact.get("scaler")
+    st.success("✓ Model loaded from database/filesystem")
+except Exception as e:
+    st.error(f"❌ Failed to load model: {e}")
+    st.stop()
 
-    # Show sample data: prefer actual CSV if present
-    st.sidebar.header("Controls")
-    n = st.sidebar.slider("Number of samples to preview", 50, 500, 200)
-    try:
-        df_full, target = load_dataset()
-        df = df_full.head(n)
-    except Exception:
-        df = generate_synthetic_car_data(n)
-
-    st.subheader("Sample Data")
-    st.dataframe(df.head(50))
-
-    st.subheader("Make a prediction (local API)")
-    # helper: normalize names and find matching column in dataset
-    def _norm(s: str) -> str:
-        return "".join(c for c in s.lower() if c.isalnum()) if s else ""
-
-    def find_col(*names):
+# Show sample data: prefer actual CSV if present
+st.sidebar.header("Controls")
+n = st.sidebar.slider("Number of samples to preview", 50, 500, 200)
+try:
+    df_full, target = load_dataset()
+    df = df_full.head(n)
+except Exception:
+    df = generate_synthetic_car_data(n)
         for n in names:
             nn = _norm(n)
             for col in df.columns:

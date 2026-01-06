@@ -39,12 +39,13 @@ This project demonstrates a complete ML workflow:
 4. [Quick Start Guide](#quick-start-guide)
 5. [Detailed Setup Instructions](#detailed-setup-instructions)
 6. [Running Each Component](#running-each-component)
-7. [API Documentation](#api-documentation)
-8. [Using Streamlit Dashboard](#using-streamlit-dashboard)
-9. [Airflow Orchestration](#airflow-orchestration)
-10. [MLflow Experiment Tracking](#mlflow-experiment-tracking)
-11. [Database Operations](#database-operations)
-12. [Troubleshooting](#troubleshooting)
+7. [Automatic Retraining System](#automatic-retraining-system) 🔄
+8. [API Documentation](#api-documentation)
+9. [Using Streamlit Dashboard](#using-streamlit-dashboard)
+10. [Airflow Orchestration](#airflow-orchestration)
+11. [MLflow Experiment Tracking](#mlflow-experiment-tracking)
+12. [Database Operations](#database-operations)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -62,7 +63,9 @@ This project demonstrates a complete ML workflow:
 5. **API Service** - FastAPI backend for real-time predictions
 6. **Interactive Dashboard** - Streamlit UI with model explainability (SHAP)
 7. **Database Integration** - PostgreSQL for evaluation metrics storage
-8. **Multi-Environment Deployment** - DEV, SIT, UAT, PROD configurations
+8. **🔄 Automatic Retraining** - Drift detection & automatic model retraining on degradation
+9. **Model Monitoring** - Performance degradation tracking with automatic alerts
+10. **Multi-Environment Deployment** - DEV, SIT, UAT, PROD configurations
 
 ### 📚 Key Technologies
 
@@ -74,6 +77,7 @@ This project demonstrates a complete ML workflow:
 | **API** | FastAPI | High-performance REST API |
 | **UI** | Streamlit | Interactive data exploration |
 | **Database** | PostgreSQL | Metrics & evaluation results |
+| **Drift Detection** | SciPy, Pandas | Data/concept drift monitoring |
 | **Containerization** | Docker | Environment consistency |
 | **Deployment** | Docker Compose, Kubernetes | Multi-environment support |
 
@@ -144,13 +148,28 @@ This project demonstrates a complete ML workflow:
    ├─ Promote to staging
    └─ Update metrics DB
 
-6. API SERVING (FastAPI)
+6. MONITORING & DRIFT DETECTION (automatic_retraining_dag) 🔄
+   ├─ Detect data drift (Kolmogorov-Smirnov test)
+   ├─ Detect concept drift (error analysis)
+   ├─ Check performance degradation (R², RMSE)
+   ├─ Calculate severity & confidence
+   ├─ Log events to PostgreSQL
+   └─ Trigger retraining if needed
+
+7. AUTOMATIC RETRAINING (automatic_retraining_dag) 🔄
+   ├─ Prepare training data (merge reference + recent)
+   ├─ Execute retraining subprocess
+   ├─ Validate improvements
+   ├─ Log metrics to database
+   └─ Update production model
+
+8. API SERVING (FastAPI)
    ├─ Load model from storage
    ├─ Accept prediction requests
    ├─ Return predictions + confidence
    └─ Log to database
 
-7. UI VISUALIZATION (Streamlit)
+9. UI VISUALIZATION (Streamlit)
    ├─ Display predictions
    ├─ Show SHAP explanations
    ├─ Plot historical metrics
@@ -757,6 +776,181 @@ http://localhost:8000/docs
 
 ---
 
+## Automatic Retraining System 🔄
+
+### Overview
+
+The automatic retraining system continuously monitors model performance and data drift, automatically triggering retraining when degradation is detected. This ensures your production model stays accurate without manual intervention.
+
+### Features
+
+#### 1. **Multi-Method Drift Detection**
+
+```python
+from scripts.automatic_retraining import AutomaticRetrainingOrchestrator
+import pandas as pd
+
+# Load reference and recent data
+ref_data = pd.read_csv("data/trainset/train.csv")
+recent_data = pd.read_csv("data/recent_data.csv")
+
+# Create orchestrator
+orchestrator = AutomaticRetrainingOrchestrator()
+
+# Check if retraining needed
+trigger = orchestrator.should_retrain(
+    reference_data=ref_data,
+    recent_data=recent_data,
+    recent_predictions=predictions,
+    recent_actuals=actuals,
+    current_metrics={'r2': 0.85, 'rmse': 0.35}
+)
+
+if trigger.triggered:
+    print(f"Retraining needed: {trigger.reason}")
+    print(f"Severity: {trigger.severity}")
+    print(f"Confidence: {trigger.confidence}%")
+```
+
+**Detection Methods:**
+
+| Method | Threshold | Description |
+|--------|-----------|-------------|
+| **Data Drift** | p < 0.05 | Kolmogorov-Smirnov test detects distribution shift in features |
+| **Concept Drift** | > 15% increase | Compares prediction errors across time windows |
+| **Performance Drop** | > 5% | Monitors R² score, RMSE, and accuracy |
+| **Outliers** | > 5% of data | Z-score based outlier detection (>3σ) |
+
+#### 2. **Severity Classification**
+
+Events are classified by severity to prioritize action:
+
+```
+🟢 LOW (< 10%)       → Monitor, log event
+🟡 MEDIUM (10-15%)   → Investigate, plan retraining
+🟠 HIGH (15-20%)     → Schedule retraining
+🔴 CRITICAL (> 20%)  → Immediate retraining
+```
+
+#### 3. **Automatic Execution**
+
+The system automatically executes retraining when triggered:
+
+```python
+from scripts.retraining_executor import RetrainingExecutor
+
+executor = RetrainingExecutor()
+result = executor.execute_full_retraining_pipeline(
+    reference_data=ref_data,
+    recent_data=recent_data
+)
+
+print(f"Retraining Status: {result['status']}")
+print(f"New R² Score: {result['new_r2']}")
+print(f"Improvement: {result['improvement_r2_percent']}%")
+```
+
+#### 4. **Event Logging**
+
+All retraining events are logged to PostgreSQL for audit and analysis:
+
+```sql
+-- View recent retraining events
+SELECT triggered_at, trigger_type, severity, execution_successful
+FROM model_retraining_events
+ORDER BY triggered_at DESC
+LIMIT 10;
+
+-- Check improvement metrics
+SELECT improvement_r2_percent, improvement_rmse_percent, improvement_accuracy_percent
+FROM model_retraining_events
+WHERE execution_successful = TRUE;
+```
+
+### Quick Start
+
+#### 1. **Check if Retraining Needed**
+
+```bash
+python scripts/automatic_retraining.py \
+  --reference-data data/trainset/train.csv \
+  --recent-data data/recent_data.csv \
+  --recent-predictions predictions.npy \
+  --recent-actuals actuals.npy
+```
+
+#### 2. **Execute Retraining Pipeline**
+
+```bash
+python scripts/retraining_executor.py \
+  --reference-data data/trainset/train.csv \
+  --recent-data data/recent_data.csv
+```
+
+#### 3. **Schedule with Airflow**
+
+The DAG `automatic_model_retraining` runs every 6 hours:
+
+```bash
+# View in Airflow UI
+http://localhost:8080/dags/automatic_model_retraining
+```
+
+### Configuration
+
+Edit thresholds in `scripts/automatic_retraining.py`:
+
+```python
+orchestrator = AutomaticRetrainingOrchestrator(
+    data_drift_threshold=0.05,          # KS test p-value threshold
+    performance_threshold=0.05,         # R² drop threshold
+    min_samples_for_retraining=100,    # Minimum recent samples
+    concept_drift_window=100            # Error comparison window
+)
+```
+
+### Monitoring
+
+Check retraining history and metrics:
+
+```python
+import psycopg2
+
+conn = psycopg2.connect(
+    host="localhost",
+    port=5433,
+    database="postgres",
+    user="postgres",
+    password="postgres"
+)
+
+cursor = conn.cursor()
+
+# Get latest event
+cursor.execute("""
+    SELECT triggered_at, trigger_type, severity, 
+           improvement_r2_percent, execution_successful
+    FROM model_retraining_events
+    ORDER BY triggered_at DESC
+    LIMIT 1
+""")
+
+event = cursor.fetchone()
+print(f"Latest event: {event}")
+cursor.close()
+conn.close()
+```
+
+### Files
+
+- **Detection Logic**: [scripts/automatic_retraining.py](scripts/automatic_retraining.py) (850 lines)
+- **Execution**: [scripts/retraining_executor.py](scripts/retraining_executor.py) (600 lines)
+- **Airflow DAG**: [airflow/dags/automatic_retraining_dag.py](airflow/dags/automatic_retraining_dag.py)
+- **Full Guide**: [AUTOMATIC_RETRAINING_GUIDE.md](AUTOMATIC_RETRAINING_GUIDE.md)
+- **Quick Reference**: [AUTOMATIC_RETRAINING_QUICK_REFERENCE.md](AUTOMATIC_RETRAINING_QUICK_REFERENCE.md)
+
+---
+
 ## Using Streamlit Dashboard
 
 ### Access Dashboard
@@ -1250,13 +1444,16 @@ ml_car_price_predection/
 │       └── monitoring_pipeline.py# Performance monitoring
 │
 ├── dags/                          # Airflow DAGs
-│   └── train_dag.py              # Training orchestration
+│   ├── train_dag.py              # Training orchestration
+│   └── automatic_retraining_dag.py # 🔄 Automatic retraining scheduler
 │
 ├── scripts/                       # Utility scripts
 │   ├── db_utils.py               # Database utilities
 │   ├── data_validation.py        # Data checks
 │   ├── monitor.py                # Performance monitoring
-│   └── query_results.py          # Query evaluation metrics
+│   ├── query_results.py          # Query evaluation metrics
+│   ├── automatic_retraining.py   # 🔄 Drift detection engine (850 lines)
+│   └── retraining_executor.py    # 🔄 Retraining execution (600 lines)
 │
 ├── models/                        # Model storage
 │   ├── trained/                  # Trained model files
@@ -1283,7 +1480,9 @@ ml_car_price_predection/
 ├── streamlit_app.py              # Streamlit UI
 ├── train.py                       # Standalone training script
 ├── requirements.txt              # Python dependencies
-└── README.md                     # This file
+├── README.md                      # This file
+├── AUTOMATIC_RETRAINING_GUIDE.md # 🔄 Comprehensive retraining guide (2,500+ lines)
+└── AUTOMATIC_RETRAINING_QUICK_REFERENCE.md # 🔄 Quick reference & APIs
 ```
 
 ---
@@ -1357,13 +1556,44 @@ for i, run in enumerate(runs):
 1. **Customize with Your Data**: Replace synthetic data with real car listings
 2. **Tune Hyperparameters**: Modify [src/models/train.py](src/models/train.py)
 3. **Add Features**: Enhance feature engineering in [src/data/preprocessing.py](src/data/preprocessing.py)
-4. **Deploy to Cloud**: Use Kubernetes manifests in [k8s/](k8s/) for Kubernetes deployment
-5. **Monitor Performance**: Set up alerts in [scripts/monitor.py](scripts/monitor.py)
+4. **Configure Automatic Retraining**: 🔄 Set thresholds in [scripts/automatic_retraining.py](scripts/automatic_retraining.py)
+5. **Monitor Drift Events**: Check [AUTOMATIC_RETRAINING_GUIDE.md](AUTOMATIC_RETRAINING_GUIDE.md) for SQL queries
+6. **Deploy to Cloud**: Use Kubernetes manifests in [k8s/](k8s/) for Kubernetes deployment
+7. **Set Up Alerts**: Monitor model degradation in [scripts/monitor.py](scripts/monitor.py)
+
+---
+
+## What's New in This Version 🔄
+
+### Automatic Model Retraining System
+
+This release introduces **automatic drift detection and model retraining** with:
+
+- **3 Detection Methods**:
+  - Data Drift (Kolmogorov-Smirnov test)
+  - Concept Drift (error analysis)
+  - Performance Degradation (R², RMSE, accuracy)
+
+- **Severity Classification**: LOW, MEDIUM, HIGH, CRITICAL
+- **Confidence Scoring**: Each trigger includes confidence metrics
+- **Automatic Execution**: Models retrain and update automatically
+- **Event Logging**: Full audit trail in PostgreSQL
+- **Airflow Integration**: Scheduled every 6 hours with task pipeline
+
+### New Files
+
+- [scripts/automatic_retraining.py](scripts/automatic_retraining.py) - Drift detection engine
+- [scripts/retraining_executor.py](scripts/retraining_executor.py) - Execution pipeline
+- [airflow/dags/automatic_retraining_dag.py](airflow/dags/automatic_retraining_dag.py) - Airflow scheduling
+- [AUTOMATIC_RETRAINING_GUIDE.md](AUTOMATIC_RETRAINING_GUIDE.md) - Comprehensive documentation
+- [AUTOMATIC_RETRAINING_QUICK_REFERENCE.md](AUTOMATIC_RETRAINING_QUICK_REFERENCE.md) - Quick reference
 
 ---
 
 ## Support & Documentation
 
+- **Automatic Retraining**: [AUTOMATIC_RETRAINING_GUIDE.md](AUTOMATIC_RETRAINING_GUIDE.md) 🔄
+- **Quick Reference**: [AUTOMATIC_RETRAINING_QUICK_REFERENCE.md](AUTOMATIC_RETRAINING_QUICK_REFERENCE.md) 🔄
 - **MLflow Docs**: https://mlflow.org/docs/latest/
 - **Airflow Docs**: https://airflow.apache.org/docs/
 - **FastAPI Docs**: https://fastapi.tiangolo.com/
@@ -1378,8 +1608,8 @@ This project is provided as-is for educational and development purposes.
 
 ---
 
-**Last Updated**: January 5, 2026  
-**Version**: 1.0
+**Last Updated**: January 6, 2026  
+**Version**: 2.0 (with Automatic Retraining)
 
 ---
 
